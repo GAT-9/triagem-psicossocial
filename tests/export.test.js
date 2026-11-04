@@ -50,7 +50,7 @@ test('planilha é um ZIP com os arquivos esperados', () => {
   assert.equal(bytes[0], 0x50);
   assert.equal(bytes[1], 0x4b);
   const text = Buffer.from(bytes).toString('utf8');
-  for (const name of ['[Content_Types].xml', 'xl/workbook.xml', 'xl/worksheets/sheet1.xml', 'xl/worksheets/sheet2.xml', 'xl/styles.xml']) {
+  for (const name of ['[Content_Types].xml', 'xl/workbook.xml', 'xl/worksheets/sheet1.xml', 'xl/worksheets/sheet2.xml', 'xl/styles.xml', 'xl/charts/chart1.xml', 'xl/drawings/drawing1.xml']) {
     assert.ok(text.includes(name), name);
   }
 });
@@ -60,4 +60,12 @@ test('planilha neutraliza XML e fórmulas digitados pelo usuário', () => {
   assert.ok(text.includes('=HYPERLINK(&quot;x&quot;) &lt;b&gt;&amp;'));
   assert.ok(!text.includes('<f>'));
   assert.ok(!text.includes('&amp;\u0007'));
+});
+
+test('relatório traz os 6 fatores em ordem de pontos, com soma igual ao total', () => {
+  const r = report(patient, { ...answers, D2: 10, R1: 10, J2: 5 });
+  assert.equal(r.factors.length, 6);
+  assert.deepEqual(r.factors.slice(0, 3).map((f) => f.label), ['Risco imediato', 'Sintomas de depressão', 'Jogos de aposta']);
+  assert.equal(r.factors.reduce((s, f) => s + f.points * 10, 0) / 10, r.total);
+  assert.equal(r.factors.reduce((s, f) => s + f.max, 0), 100);
 });
