@@ -38,7 +38,7 @@ Regras que elevam a categoria, mesmo com soma baixa:
 
 Três abas: dados do paciente, perguntas e resumo. É possível voltar aos dados a qualquer momento sem perder respostas. Se uma resposta mudar, o resumo só volta depois de enviar de novo.
 
-O resumo exporta planilha `.xlsx` e PDF, gerados no próprio navegador. Os nomes dos arquivos trazem só a data, não o nome do paciente, mas o conteúdo traz dados pessoais e de saúde.
+O resumo exporta planilha `.xlsx` e PDF, gerados no próprio navegador. Os arquivos se chamam `Nome - DD-MM-AAAA`, com o nome do paciente e a data da triagem. Tanto o nome do arquivo quanto o conteúdo trazem dados pessoais, e o conteúdo traz também dados de saúde.
 
 A tela de dados não é um login real: não há senha, conta nem controle de acesso.
 

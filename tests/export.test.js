@@ -69,3 +69,15 @@ test('relatório traz os 6 fatores em ordem de pontos, com soma igual ao total',
   assert.equal(r.factors.reduce((s, f) => s + f.points * 10, 0) / 10, r.total);
   assert.equal(r.factors.reduce((s, f) => s + f.max, 0), 100);
 });
+
+test('nome do arquivo usa o nome do paciente e a data da triagem', () => {
+  assert.equal(exporter.fileName('Maria da Silva', '2026-11-04', 'xlsx'), 'Maria da Silva - 04-11-2026.xlsx');
+  assert.equal(exporter.fileName('João Conceição', '2026-01-09', 'pdf'), 'João Conceição - 09-01-2026.pdf');
+});
+
+test('nome do arquivo remove caracteres inválidos e tentativas de caminho', () => {
+  assert.equal(exporter.fileName('../a/b:c*d?', '2026-11-04', 'pdf'), 'a b c d - 04-11-2026.pdf');
+  assert.equal(exporter.fileName('  Ana   Lima.  ', '2026-11-04', 'pdf'), 'Ana Lima - 04-11-2026.pdf');
+  assert.equal(exporter.fileName('<>:"/', '2026-11-04', 'pdf'), 'Triagem - 04-11-2026.pdf');
+  assert.ok(exporter.fileName('x'.repeat(300), '2026-11-04', 'pdf').length <= 100);
+});

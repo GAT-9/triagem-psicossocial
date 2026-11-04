@@ -351,11 +351,11 @@
     card.appendChild(el('div', { class: 'actions' }, [
       button('baixar-planilha', 'btn-primary', 'Baixar planilha', exporting(function () {
         var report = currentReport(core.score(readAnswers()));
-        download(new Blob([exporter.buildXlsx(report)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), 'triagem-' + report.date + '.xlsx');
+        download(new Blob([exporter.buildXlsx(report)], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }), exporter.fileName(report.fileBase.nome, report.fileBase.date, 'xlsx'));
       })),
       button('baixar-pdf', 'btn-primary', 'Baixar PDF', exporting(function () {
         var report = currentReport(core.score(readAnswers()));
-        download(exporter.buildPdf(report, window.jspdf.jsPDF).output('blob'), 'triagem-' + report.date + '.pdf');
+        download(exporter.buildPdf(report, window.jspdf.jsPDF).output('blob'), exporter.fileName(report.fileBase.nome, report.fileBase.date, 'pdf'));
       })),
       button('editar-dados', '', 'Editar dados do paciente', function () { showTab('dados'); }),
       button('reiniciar', '', 'Nova triagem', restart)

@@ -29,6 +29,18 @@
 
   function fmt(n) { return n.toFixed(1).replace('.', ','); }
 
+  /* Nome do arquivo: "Nome - DD-MM-AAAA.ext", sem caracteres que os sistemas de arquivos recusam */
+  function fileName(nome, dateIso, ext) {
+    var clean = String(nome)
+      .replace(/[\u0000-\u001f\u007f<>:"\/\\|?*]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 80)
+      .replace(/[. ]+$/, '')
+      .replace(/^[. ]+/, '');
+    return (clean || 'Triagem') + ' - ' + formatDate(dateIso).replace(/\//g, '-') + '.' + ext;
+  }
+
   /* Reúne dados do paciente e resultado em uma estrutura única para os dois formatos. */
   function buildReport(patient, r, labels) {
     var age = ageAt(patient.nascimento, patient.dataTriagem);
@@ -43,7 +55,7 @@
         ['Profissional responsável', patient.profissional || ''],
         ['Observações', patient.observacoes || '']
       ].filter(function (row) { return row[1] !== ''; }),
-      date: patient.dataTriagem,
+      fileBase: { nome: patient.nome, date: patient.dataTriagem },
       total: r.total,
       categoryKey: r.category,
       category: labels[r.category],
@@ -624,7 +636,7 @@
     return doc;
   }
 
-  var api = { buildReport: buildReport, buildXlsx: buildXlsx, buildPdf: buildPdf, ageAt: ageAt, formatDate: formatDate, crc32: crc32, DISCLAIMER: DISCLAIMER };
+  var api = { buildReport: buildReport, buildXlsx: buildXlsx, buildPdf: buildPdf, fileName: fileName, ageAt: ageAt, formatDate: formatDate, crc32: crc32, DISCLAIMER: DISCLAIMER };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else window.TriagemExport = api;
 })();
