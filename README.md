@@ -1,11 +1,11 @@
 # Triagem psicossocial (protótipo)
 
-Questionário de 17 perguntas com botões de 0 a 10. O cálculo roda só no navegador: nada é enviado nem salvo.
+Questionário de 17 perguntas com botões de 0 a 10. O cálculo roda só no navegador: nada é enviado nem salvo na página.
 **É uma triagem, não um diagnóstico, e não deve orientar decisões reais antes de validação clínica.**
 
 - Abrir: `index.html`, sem instalação.
 - Testar a pontuação: `node --test tests/`
-- Ajustar perguntas, pesos e regras: início de `triagem.js`.
+- Ajustar perguntas, pesos e regras: `triagem.js`. Interface: `app.js`. Exportação: `export.js`.
 
 ## Como a pontuação funciona
 
@@ -32,8 +32,19 @@ Regras que elevam a categoria, mesmo com soma baixa:
 - Pesos, cortes e regras são propostas do protótipo, sem calibração em dados reais.
 - Os itens foram recortados e passados para 0 a 10, então os pontos de corte originais das escalas não se aplicam.
 - V1, V2, V3 e R3 foram elaboradas para o protótipo e não vêm de instrumento validado.
-- Um uso real exige fluxo de atendimento para respostas de risco, adequação à LGPD e verificação das licenças das escalas.
+- Um uso real exige fluxo de atendimento para respostas de risco, adequação à LGPD (base legal, consentimento, guarda dos arquivos exportados e, se necessário, controle de acesso) e verificação das licenças das escalas.
 
-## Visual
+## Fluxo e exportação
 
-Segue o padrão do portal de fluxogramas do GAT 9 (https://fluxograma-usf.netlify.app/). As fontes DM Sans e Lato (licença SIL OFL 1.1) ficam em `fonts/`, então a página não faz nenhuma requisição externa.
+Três abas: dados do paciente, perguntas e resumo. É possível voltar aos dados a qualquer momento sem perder respostas. Se uma resposta mudar, o resumo só volta depois de enviar de novo.
+
+O resumo exporta planilha `.xlsx` e PDF, gerados no próprio navegador. Os nomes dos arquivos trazem só a data, não o nome do paciente, mas o conteúdo traz dados pessoais e de saúde.
+
+A tela de dados não é um login real: não há senha, conta nem controle de acesso.
+
+## Dependências incluídas
+
+- `vendor/`: jsPDF 4.2.1 (licença MIT).
+- `fonts/`: Nunito (licença SIL OFL 1.1).
+
+A página não faz nenhuma requisição externa.

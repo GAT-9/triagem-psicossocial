@@ -8,69 +8,120 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <a class="skip" href="#triagem">Ir para o questionário</a>
+  <a class="skip" href="#conteudo">Ir para o conteúdo</a>
 
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <span class="logo" aria-hidden="true">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 22l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
-      </span>
-      <div class="brand">
-        <strong>Triagem psicossocial</strong>
-        <span>PET-Saúde GAT 9</span>
-      </div>
-      <p class="count"><strong>17</strong> perguntas</p>
+  <header class="brand-row">
+    <div class="wrap">
+      <strong>Triagem psicossocial</strong>
+      <span>PET-Saúde GAT 9</span>
     </div>
   </header>
 
-  <section class="hero" aria-labelledby="titulo">
-    <div class="container">
-      <p class="eyebrow">Triagem, não diagnóstico</p>
-      <h1 id="titulo">Como você tem <span>se sentido?</span></h1>
-      <p class="lead">Este questionário ajuda o serviço a entender como pode apoiar você. Para cada frase, escolha um número de 0 a 10. Não existe resposta certa ou errada, e leva cerca de 3 minutos.</p>
-    </div>
-  </section>
-
-  <div class="band">
-    <div class="container">
-      <div class="progress" aria-hidden="true">
+  <div class="tabs-bar">
+    <div class="wrap">
+      <nav class="tabs" aria-label="Etapas da triagem">
+        <button type="button" class="tab" data-tab="dados"><span class="tab-num" aria-hidden="true">1</span> Dados</button>
+        <button type="button" class="tab" data-tab="perguntas"><span class="tab-num" aria-hidden="true">2</span> Perguntas</button>
+        <button type="button" class="tab" data-tab="resumo" disabled><span class="tab-num" aria-hidden="true">3</span> Resumo</button>
+      </nav>
+      <div class="progress" id="progress" aria-hidden="true" hidden>
         <span id="progress-text">0 de 17</span>
         <span class="bar"><span id="progress-fill" class="bar-fill"></span></span>
       </div>
-      <nav id="chips" class="chips" aria-label="Partes do questionário"></nav>
     </div>
   </div>
 
-  <main class="container">
-    <aside class="help" aria-labelledby="help-title">
-      <div class="help-intro">
-        <h2 id="help-title">Precisa de apoio agora?</h2>
-        <p>Você pode parar a qualquer momento e procurar ajuda.</p>
+  <main id="conteudo" class="wrap">
+    <noscript><p class="alert">Esta página precisa de JavaScript para funcionar.</p></noscript>
+
+    <section id="tab-dados" class="panel login" aria-labelledby="title-dados">
+      <div class="login-intro">
+        <h1 id="title-dados" tabindex="-1">Vamos começar</h1>
+        <p>Preencha os dados de quem está fazendo a triagem. Depois vêm as perguntas, e você pode voltar aqui quando precisar, sem perder as respostas.</p>
+        <p class="login-note">Esta página não é um sistema de acesso e não pede senha. Nada é enviado nem salvo: os dados somem ao fechar a página, a menos que você exporte o resultado.</p>
       </div>
-      <ul>
-        <li><a href="tel:188"><strong>188</strong> <span>CVV, apoio emocional, 24 horas</span></a></li>
-        <li><a href="tel:192"><strong>192</strong> <span>SAMU, emergência de saúde</span></a></li>
-        <li><a href="tel:190"><strong>190</strong> <span>Polícia Militar, em caso de perigo causado por outra pessoa</span></a></li>
-      </ul>
-    </aside>
 
-    <noscript><p class="alert">Este questionário precisa de JavaScript para funcionar.</p></noscript>
+      <form id="form-dados" class="login-card" novalidate autocomplete="off">
+        <div id="errors-dados" class="alert" role="alert" tabindex="-1" hidden></div>
 
-    <form id="triagem" novalidate autocomplete="off">
-      <div id="errors" class="alert" role="alert" tabindex="-1" hidden></div>
-      <div id="questions"></div>
-      <button type="submit" class="btn btn-primary">Enviar e ver o resumo</button>
-    </form>
+        <div class="field">
+          <label for="nome">Nome completo ou social</label>
+          <input id="nome" name="nome" type="text" required maxlength="120" aria-describedby="err-nome">
+          <p class="field-error" id="err-nome" hidden></p>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="nascimento">Data de nascimento</label>
+            <input id="nascimento" name="nascimento" type="date" required aria-describedby="err-nascimento">
+            <p class="field-error" id="err-nascimento" hidden></p>
+          </div>
+          <div class="field">
+            <label for="dataTriagem">Data da triagem</label>
+            <input id="dataTriagem" name="dataTriagem" type="date" required aria-describedby="err-dataTriagem">
+            <p class="field-error" id="err-dataTriagem" hidden></p>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="cns">Cartão SUS <span class="optional">(opcional)</span></label>
+            <input id="cns" name="cns" type="text" inputmode="numeric" maxlength="20" aria-describedby="err-cns">
+            <p class="field-error" id="err-cns" hidden></p>
+          </div>
+          <div class="field">
+            <label for="telefone">Telefone <span class="optional">(opcional)</span></label>
+            <input id="telefone" name="telefone" type="tel" maxlength="20" aria-describedby="err-telefone">
+            <p class="field-error" id="err-telefone" hidden></p>
+          </div>
+        </div>
+        <div class="field">
+          <label for="profissional">Profissional responsável <span class="optional">(opcional)</span></label>
+          <input id="profissional" name="profissional" type="text" maxlength="120">
+        </div>
+        <div class="field">
+          <label for="observacoes">Observações <span class="optional">(opcional)</span></label>
+          <textarea id="observacoes" name="observacoes" rows="3" maxlength="500"></textarea>
+        </div>
 
-    <section id="resultado" class="result" tabindex="-1" aria-labelledby="result-title" hidden></section>
+        <button type="submit" class="btn btn-primary">Continuar para as perguntas</button>
+      </form>
+    </section>
+
+    <section id="tab-perguntas" class="panel" aria-labelledby="title-perguntas" hidden>
+      <h1 id="title-perguntas" tabindex="-1">Como você tem se sentido?</h1>
+      <p class="lead">Para cada frase, escolha um número de 0 a 10. Não existe resposta certa ou errada. O resultado é uma triagem, <strong>não um diagnóstico</strong>.</p>
+
+      <div class="help">
+        <h2>Precisa de apoio agora?</h2>
+        <p>Você pode parar a qualquer momento e procurar ajuda.</p>
+        <ul>
+          <li><a href="tel:188"><strong>188</strong> <span>CVV, apoio emocional, 24 horas</span></a></li>
+          <li><a href="tel:192"><strong>192</strong> <span>SAMU, emergência de saúde</span></a></li>
+          <li><a href="tel:190"><strong>190</strong> <span>Polícia Militar, em caso de perigo causado por outra pessoa</span></a></li>
+        </ul>
+      </div>
+
+      <form id="triagem" novalidate autocomplete="off">
+        <div id="errors" class="alert" role="alert" tabindex="-1" hidden></div>
+        <div id="questions"></div>
+        <button type="submit" class="btn btn-primary">Enviar e ver o resumo</button>
+      </form>
+    </section>
+
+    <section id="tab-resumo" class="panel" aria-labelledby="title-resumo" hidden>
+      <h1 id="title-resumo" tabindex="-1">Resumo da triagem</h1>
+      <div id="resultado"></div>
+    </section>
   </main>
 
   <footer class="footer">
-    <div class="container">
-      <p><strong>Protótipo em teste.</strong> Pesos e pontos de corte ainda não foram validados. Suas respostas ficam só nesta página e não são enviadas para nenhum lugar.</p>
+    <div class="wrap">
+      <p><strong>Protótipo em teste.</strong> Pesos e pontos de corte ainda não foram validados. Os arquivos exportados contêm dados pessoais e de saúde: guarde-os em local seguro.</p>
     </div>
   </footer>
 
+  <script src="vendor/jspdf-4.2.1.umd.min.js"></script>
+  <script src="export.js"></script>
   <script src="triagem.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
