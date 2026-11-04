@@ -203,7 +203,7 @@
       ]));
     }
 
-    return el('fieldset', { id: 'q-' + item.id, 'aria-describedby': hintId }, [
+    return el('div', { class: 'q-card' }, [el('fieldset', { id: 'q-' + item.id, 'aria-describedby': hintId }, [
       el('legend', { text: item.text }),
       el('div', { class: 'anchors', id: hintId }, [
         el('span', { text: '0 = ' + low }),
@@ -213,15 +213,32 @@
       el('span', { class: 'bar', 'aria-hidden': 'true' }, [el('span', { class: 'bar-fill' })]),
       item.support ? el('p', { class: 'note', role: 'status', hidden: 'hidden' }) : null,
       el('p', { class: 'field-error', id: 'err-' + item.id, hidden: 'hidden', text: 'Escolha um valor de 0 a 10.' })
-    ]);
+    ])]);
   }
 
-  FACTORS.forEach(function (f) {
-    host.appendChild(el('section', { class: 'factor', 'aria-labelledby': 'h-' + f.id }, [
-      el('h2', { id: 'h-' + f.id, text: f.label }),
-      el('p', { class: 'factor-window', text: f.window })
-    ].concat(f.items.map(function (it) { return renderQuestion(f, it); }))));
+  var chips = document.getElementById('chips');
+
+  FACTORS.forEach(function (f, i) {
+    host.appendChild(el('section', { class: 'factor', id: 'parte-' + f.id, 'aria-labelledby': 'h-' + f.id }, [
+      el('div', { class: 'factor-head' }, [
+        el('span', { class: 'factor-num', 'aria-hidden': 'true', text: String(i + 1) }),
+        el('h2', { id: 'h-' + f.id, text: f.label }),
+        el('p', { class: 'factor-window', text: f.window })
+      ]),
+      el('div', { class: 'cards' }, f.items.map(function (it) { return renderQuestion(f, it); }))
+    ]));
+    chips.appendChild(el('a', { class: 'chip', id: 'chip-' + f.id, href: '#parte-' + f.id, text: f.label }));
   });
+
+  function updateChips(answers) {
+    FACTORS.forEach(function (f) {
+      var done = f.items.every(function (it) { return answers[it.id] !== undefined; });
+      var chip = document.getElementById('chip-' + f.id);
+      chip.classList.toggle('done', done);
+      chip.textContent = (done ? '✓ ' : '') + f.label;
+      chip.setAttribute('aria-label', f.label + (done ? ', parte respondida' : ''));
+    });
+  }
 
   function readAnswers() {
     var answers = {};
@@ -233,7 +250,9 @@
   }
 
   function updateProgress() {
-    var done = Object.keys(readAnswers()).length;
+    var current = readAnswers();
+    var done = Object.keys(current).length;
+    updateChips(current);
     progressText.textContent = done + ' de ' + total;
     progressFill.style.width = (done / total) * 100 + '%';
   }
@@ -292,7 +311,7 @@
 
   function supportBlock() {
     return el('div', { class: 'help' }, [
-      el('h3', { text: 'Apoio disponível agora', style: 'margin-top:0' }),
+      el('h3', { text: 'Apoio disponível agora' }),
       el('p', { text: 'Algumas respostas indicam que pode ser bom falar com alguém sem esperar pelo atendimento.' }),
       el('ul', {}, [
         ['tel:188', '188', 'CVV, apoio emocional, 24 horas'],
@@ -308,28 +327,32 @@
     result.textContent = '';
 
     result.appendChild(el('h2', { id: 'result-title', text: 'Resumo da triagem' }));
-    result.appendChild(el('div', { class: 'score' }, [
+    var left = el('div', { class: 'result-col' });
+    var right = el('div', { class: 'result-col' });
+    result.appendChild(el('div', { class: 'result-grid' }, [left, right]));
+
+    left.appendChild(el('div', { class: 'score' }, [
       el('span', { class: 'score-value', text: fmt(r.total) }),
       el('span', { class: 'score-max', text: 'de 100 pontos' })
     ]));
-    result.appendChild(el('p', {}, [
-      el('span', { class: 'category', text: 'Categoria de risco: ' + CATEGORY_LABEL[r.category] })
+    left.appendChild(el('p', {}, [
+      el('span', { class: 'category cat-' + r.category, text: 'Categoria de risco: ' + CATEGORY_LABEL[r.category] })
     ]));
 
     if (r.raisedByRule) {
-      result.appendChild(el('p', {
+      left.appendChild(el('p', {
         class: 'reason',
         text: 'Só pela soma, o risco seria ' + CATEGORY_LABEL[r.categoryBySum].toLowerCase() + '. Ele subiu por uma regra de atenção. ' + r.reasons.join(' ')
       }));
     }
 
-    if (r.showSupport) result.appendChild(supportBlock());
+    if (r.showSupport) left.appendChild(supportBlock());
 
-    result.appendChild(el('h3', { text: 'Fatores que mais contribuíram' }));
+    right.appendChild(el('h3', { text: 'Fatores que mais contribuíram' }));
     if (r.top.length === 0) {
-      result.appendChild(el('p', { text: 'Nenhum fator somou pontos.' }));
+      right.appendChild(el('p', { text: 'Nenhum fator somou pontos.' }));
     } else {
-      result.appendChild(el('ol', { class: 'contrib' }, r.top.map(function (f) {
+      right.appendChild(el('ol', { class: 'contrib' }, r.top.map(function (f) {
         return el('li', {}, [
           el('div', { class: 'contrib-head' }, [
             el('span', { text: f.factor.label }),
@@ -343,10 +366,12 @@
       })));
     }
 
-    result.appendChild(el('h3', { text: 'Sugestão de encaminhamento' }));
-    result.appendChild(el('div', { class: 'referral' }, [el('p', { text: r.referral })].concat(
-      r.addons.map(function (a) { return el('p', { text: a }); })
-    )));
+    result.appendChild(el('div', { class: 'referral-block' }, [
+      el('h3', { text: 'Sugestão de encaminhamento' }),
+      el('div', { class: 'referral' }, [el('p', { text: r.referral })].concat(
+        r.addons.map(function (a) { return el('p', { text: a }); })
+      ))
+    ]));
 
     result.appendChild(el('p', {
       class: 'disclaimer',

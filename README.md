@@ -33,3 +33,7 @@ Regras que elevam a categoria, mesmo com soma baixa:
 - Os itens foram recortados e passados para 0 a 10, então os pontos de corte originais das escalas não se aplicam.
 - V1, V2, V3 e R3 foram elaboradas para o protótipo e não vêm de instrumento validado.
 - Um uso real exige fluxo de atendimento para respostas de risco, adequação à LGPD e verificação das licenças das escalas.
+
+## Visual
+
+Segue o padrão do portal de fluxogramas do GAT 9 (https://fluxograma-usf.netlify.app/). As fontes DM Sans e Lato (licença SIL OFL 1.1) ficam em `fonts/`, então a página não faz nenhuma requisição externa.

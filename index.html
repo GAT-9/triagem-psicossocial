@@ -10,40 +10,66 @@
 <body>
   <a class="skip" href="#triagem">Ir para o questionário</a>
 
-  <header class="page-head">
-    <p class="badge">Protótipo: pesos e pontos de corte ainda não validados</p>
-    <h1>Triagem psicossocial</h1>
-    <p>Responda de 0 a 10. São 17 perguntas, e leva cerca de 3 minutos. O resultado é uma triagem para orientar o encaminhamento: <strong>não é um diagnóstico</strong>.</p>
-    <p>Suas respostas ficam só nesta página e não são enviadas para nenhum lugar.</p>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <span class="logo" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5.5 5.5 0 0 0-7.8 0L12 6.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 22l7.8-7.5 1-1.1a5.5 5.5 0 0 0 0-7.8z"/></svg>
+      </span>
+      <div class="brand">
+        <strong>Triagem psicossocial</strong>
+        <span>PET-Saúde GAT 9</span>
+      </div>
+      <p class="count"><strong>17</strong> perguntas</p>
+    </div>
   </header>
 
-  <aside class="help" aria-labelledby="help-title">
-    <h2 id="help-title">Precisa de apoio agora?</h2>
-    <p>Você pode interromper a qualquer momento e procurar ajuda.</p>
-    <ul>
-      <li><a href="tel:188"><strong>188</strong> CVV, apoio emocional, 24 horas</a></li>
-      <li><a href="tel:192"><strong>192</strong> SAMU, emergência de saúde</a></li>
-      <li><a href="tel:190"><strong>190</strong> Polícia Militar, em caso de perigo causado por outra pessoa</a></li>
-    </ul>
-  </aside>
+  <section class="hero" aria-labelledby="titulo">
+    <div class="container">
+      <p class="eyebrow">Triagem, não diagnóstico</p>
+      <h1 id="titulo">Como você tem <span>se sentido?</span></h1>
+      <p class="lead">Este questionário ajuda o serviço a entender como pode apoiar você. Para cada frase, escolha um número de 0 a 10. Não existe resposta certa ou errada, e leva cerca de 3 minutos.</p>
+    </div>
+  </section>
 
-  <main>
+  <div class="band">
+    <div class="container">
+      <div class="progress" aria-hidden="true">
+        <span id="progress-text">0 de 17</span>
+        <span class="bar"><span id="progress-fill" class="bar-fill"></span></span>
+      </div>
+      <nav id="chips" class="chips" aria-label="Partes do questionário"></nav>
+    </div>
+  </div>
+
+  <main class="container">
+    <aside class="help" aria-labelledby="help-title">
+      <div class="help-intro">
+        <h2 id="help-title">Precisa de apoio agora?</h2>
+        <p>Você pode parar a qualquer momento e procurar ajuda.</p>
+      </div>
+      <ul>
+        <li><a href="tel:188"><strong>188</strong> <span>CVV, apoio emocional, 24 horas</span></a></li>
+        <li><a href="tel:192"><strong>192</strong> <span>SAMU, emergência de saúde</span></a></li>
+        <li><a href="tel:190"><strong>190</strong> <span>Polícia Militar, em caso de perigo causado por outra pessoa</span></a></li>
+      </ul>
+    </aside>
+
     <noscript><p class="alert">Este questionário precisa de JavaScript para funcionar.</p></noscript>
 
     <form id="triagem" novalidate autocomplete="off">
       <div id="errors" class="alert" role="alert" tabindex="-1" hidden></div>
       <div id="questions"></div>
-
-      <div class="progress" aria-hidden="true">
-        <span id="progress-text">0 de 17</span>
-        <span class="bar"><span id="progress-fill" class="bar-fill"></span></span>
-      </div>
-
       <button type="submit" class="btn btn-primary">Enviar e ver o resumo</button>
     </form>
 
     <section id="resultado" class="result" tabindex="-1" aria-labelledby="result-title" hidden></section>
   </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p><strong>Protótipo em teste.</strong> Pesos e pontos de corte ainda não foram validados. Suas respostas ficam só nesta página e não são enviadas para nenhum lugar.</p>
+    </div>
+  </footer>
 
   <script src="triagem.js"></script>
 </body>
