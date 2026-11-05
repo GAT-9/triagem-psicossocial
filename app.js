@@ -12,7 +12,6 @@
   var form = document.getElementById('triagem');
   var host = document.getElementById('questions');
   var errors = document.getElementById('errors');
-  var errorsDados = document.getElementById('errors-dados');
   var result = document.getElementById('resultado');
   var progress = document.getElementById('progress');
   var progressText = document.getElementById('progress-text');
@@ -92,26 +91,13 @@
       if (message) input.setAttribute('aria-invalid', 'true');
       else input.removeAttribute('aria-invalid');
     });
-    var keys = Object.keys(LABELS).filter(function (k) { return found[k]; });
-    errorsDados.hidden = keys.length === 0;
-    errorsDados.textContent = '';
-    if (keys.length) {
-      errorsDados.appendChild(el('p', { text: 'Confira antes de continuar:' }));
-      errorsDados.appendChild(el('ul', {}, keys.map(function (k) {
-        return el('li', {}, [el('a', { href: '#' + k, text: LABELS[k] + ': ' + found[k] })]);
-      })));
-      errorsDados.focus();
+    var firstInvalid = Object.keys(LABELS).filter(function (k) { return found[k]; })[0];
+    if (firstInvalid) {
+      document.getElementById(firstInvalid).focus();
       return false;
     }
     return true;
   }
-
-  errorsDados.addEventListener('click', function (e) {
-    var link = e.target.closest('a');
-    if (!link) return;
-    e.preventDefault();
-    document.querySelector(link.getAttribute('href')).focus();
-  });
 
   formDados.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -401,7 +387,6 @@
     form.querySelectorAll('.bar-fill').forEach(function (b) { b.style.width = '0'; });
     form.querySelectorAll('.note').forEach(function (n) { n.hidden = true; n.textContent = ''; });
     errors.hidden = true;
-    errorsDados.hidden = true;
     invalidateResult();
     updateProgress();
     showTab('dados');
