@@ -11,7 +11,6 @@
   var formDados = document.getElementById('form-dados');
   var form = document.getElementById('triagem');
   var host = document.getElementById('questions');
-  var errors = document.getElementById('errors');
   var result = document.getElementById('resultado');
   var progress = document.getElementById('progress');
   var progressText = document.getElementById('progress-text');
@@ -64,9 +63,11 @@
     t.addEventListener('click', function () {
       var target = t.dataset.tab;
       if (target === state.tab) return;
-      /* Sair da aba de dados exige dados válidos: o resumo e os arquivos dependem deles */
-      if (state.tab === 'dados' && !validateDados()) return;
-      if (target === 'resumo') renderResult();
+      /* Dados e Perguntas ficam sempre liberadas; só o resumo e os arquivos dependem de dados válidos */
+      if (target === 'resumo') {
+        if (!validateDados()) return;
+        renderResult();
+      }
       showTab(target);
     });
   });
@@ -79,7 +80,7 @@
     return data;
   }
 
-  function validateDados() {
+  function markDados() {
     var found = core.validatePatient(readPatient(), todayIso());
     Object.keys(LABELS).forEach(function (key) {
       var input = document.getElementById(key);
@@ -91,17 +92,25 @@
       if (message) input.setAttribute('aria-invalid', 'true');
       else input.removeAttribute('aria-invalid');
     });
-    var firstInvalid = Object.keys(LABELS).filter(function (k) { return found[k]; })[0];
-    if (firstInvalid) {
-      document.getElementById(firstInvalid).focus();
-      return false;
-    }
-    return true;
+    return Object.keys(LABELS).filter(function (k) { return found[k]; })[0];
+  }
+
+  function validateDados() {
+    var firstInvalid = markDados();
+    if (!firstInvalid) return true;
+    showTab('dados', false);
+    document.getElementById(firstInvalid).focus();
+    return false;
   }
 
   formDados.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (validateDados()) showTab('perguntas');
+    showTab('perguntas');
+  });
+
+  /* Tira o destaque assim que a pessoa corrige o campo */
+  formDados.addEventListener('input', function (e) {
+    if (e.target.classList.contains('invalid')) markDados();
   });
 
   /* ---------- Perguntas ---------- */
@@ -182,47 +191,24 @@
 
     /* Resposta alterada: o resumo antigo deixa de valer até enviar de novo */
     if (state.submitted) invalidateResult();
-
-    if (!errors.hidden) {
-      var left = missingItems(readAnswers());
-      if (left.length) renderErrorList(left);
-      else errors.hidden = true;
-    }
-  });
-
-  function renderErrorList(missing) {
-    errors.textContent = '';
-    errors.appendChild(el('p', { text: missing.length === 1 ? 'Falta responder 1 pergunta:' : 'Faltam responder ' + missing.length + ' perguntas:' }));
-    errors.appendChild(el('ul', {}, missing.map(function (it) {
-      return el('li', {}, [el('a', { href: '#q-' + it.id, text: it.text })]);
-    })));
-  }
-
-  errors.addEventListener('click', function (e) {
-    var link = e.target.closest('a');
-    if (!link) return;
-    e.preventDefault();
-    var fs = document.querySelector(link.getAttribute('href'));
-    fs.scrollIntoView({ block: 'start' });
-    fs.querySelector('input').focus({ preventScroll: true });
   });
 
   form.addEventListener('submit', function (e) {
     e.preventDefault();
     var answers = readAnswers();
     var missing = missingItems(answers);
+    missing.forEach(function (it) {
+      var fs = document.getElementById('q-' + it.id);
+      fs.classList.add('missing');
+      fs.querySelector('.field-error').hidden = false;
+    });
+    if (!validateDados()) return;
     if (missing.length) {
-      renderErrorList(missing);
-      errors.hidden = false;
-      missing.forEach(function (it) {
-        var fs = document.getElementById('q-' + it.id);
-        fs.classList.add('missing');
-        fs.querySelector('.field-error').hidden = false;
-      });
-      errors.focus();
+      var first = document.getElementById('q-' + missing[0].id);
+      first.scrollIntoView({ block: 'start' });
+      first.querySelector('input').focus({ preventScroll: true });
       return;
     }
-    errors.hidden = true;
     state.submitted = true;
     tabResumo.disabled = false;
     renderResult();
@@ -386,7 +372,6 @@
     document.getElementById('dataTriagem').value = todayIso();
     form.querySelectorAll('.bar-fill').forEach(function (b) { b.style.width = '0'; });
     form.querySelectorAll('.note').forEach(function (n) { n.hidden = true; n.textContent = ''; });
-    errors.hidden = true;
     invalidateResult();
     updateProgress();
     showTab('dados');
