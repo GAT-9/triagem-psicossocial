@@ -37,7 +37,7 @@ test('idade considera se o aniversário já passou', () => {
 test('relatório omite campos vazios e traz todas as respostas', () => {
   const r = report();
   assert.deepEqual(r.patientRows.map((x) => x[0]), ['Nome', 'Data de nascimento', 'Idade na triagem', 'Data da triagem']);
-  assert.equal(r.answers.length, 17);
+  assert.equal(r.answers.length, 20);
   assert.equal(exporter.formatDate('2026-11-04'), '04/11/2026');
 });
 
@@ -62,9 +62,9 @@ test('planilha neutraliza XML e fórmulas digitados pelo usuário', () => {
   assert.ok(!text.includes('&amp;\u0007'));
 });
 
-test('relatório traz os 6 fatores em ordem de pontos, com soma igual ao total', () => {
+test('relatório traz os 7 fatores em ordem de pontos, com soma igual ao total', () => {
   const r = report(patient, { ...answers, D2: 10, R1: 10, J2: 5 });
-  assert.equal(r.factors.length, 6);
+  assert.equal(r.factors.length, 7);
   assert.deepEqual(r.factors.slice(0, 3).map((f) => f.label), ['Risco imediato', 'Sintomas de depressão', 'Jogos de aposta']);
   assert.equal(r.factors.reduce((s, f) => s + f.points * 10, 0) / 10, r.total);
   assert.equal(r.factors.reduce((s, f) => s + f.max, 0), 100);

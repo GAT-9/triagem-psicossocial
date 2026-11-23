@@ -11,9 +11,9 @@
       id: 'depressao', label: 'Sintomas de depressão', window: 'Nas últimas 2 semanas, com que frequência isto incomodou?',
       low: 'nunca', high: 'quase todos os dias',
       items: [
-        { id: 'D1', weight: 6, source: 'PHQ-9, item 1', text: 'Pouco interesse ou pouco prazer em fazer as coisas' },
-        { id: 'D2', weight: 7, source: 'PHQ-9, item 2', text: 'Se sentir “para baixo”, deprimido/a ou sem perspectiva' },
-        { id: 'D3', weight: 5, source: 'PHQ-9, item 6', text: 'Se sentir mal consigo mesmo/a, ou achar que é um fracasso ou que decepcionou sua família ou você mesmo/a' },
+        { id: 'D1', weight: 5, source: 'PHQ-9, item 1', text: 'Pouco interesse ou pouco prazer em fazer as coisas' },
+        { id: 'D2', weight: 6, source: 'PHQ-9, item 2', text: 'Se sentir “para baixo”, deprimido/a ou sem perspectiva' },
+        { id: 'D3', weight: 4, source: 'PHQ-9, item 6', text: 'Se sentir mal consigo mesmo/a, ou achar que é um fracasso ou que decepcionou sua família ou você mesmo/a' },
         { id: 'D4', weight: 4, source: 'PHQ-9, item 4', text: 'Se sentir cansado/a ou com pouca energia' }
       ]
     },
@@ -21,16 +21,16 @@
       id: 'ansiedade', label: 'Sintomas de ansiedade', window: 'Na última semana, quanto isto se aplicou a você?',
       low: 'não se aplicou', high: 'aplicou-se muito',
       items: [
-        { id: 'A1', weight: 7, source: 'DASS-21, item 15', text: 'Senti que ia entrar em pânico' },
-        { id: 'A2', weight: 6, source: 'DASS-21, item 20', text: 'Senti medo sem motivo' },
-        { id: 'A3', weight: 5, source: 'DASS-21, item 4', text: 'Tive dificuldade em respirar em alguns momentos, sem ter feito esforço físico' }
+        { id: 'A1', weight: 6, source: 'DASS-21, item 15', text: 'Senti que ia entrar em pânico' },
+        { id: 'A2', weight: 5, source: 'DASS-21, item 20', text: 'Senti medo sem motivo' },
+        { id: 'A3', weight: 4, source: 'DASS-21, item 4', text: 'Tive dificuldade em respirar em alguns momentos, sem ter feito esforço físico' }
       ]
     },
     {
       id: 'sono', label: 'Sono', window: 'Nas últimas 2 semanas, com que frequência isto aconteceu?',
       low: 'nunca', high: 'sempre',
       items: [
-        { id: 'S1', weight: 4, source: 'Miniquestionário de Sono, item 2', text: 'Você acorda de madrugada e não consegue adormecer de novo?' },
+        { id: 'S1', weight: 3, source: 'Miniquestionário de Sono, item 2', text: 'Você acorda de madrugada e não consegue adormecer de novo?' },
         { id: 'S2', weight: 3, source: 'Miniquestionário de Sono, item 5', text: 'Ao acordar de manhã, você ainda se sente cansado(a)?' }
       ]
     },
@@ -39,16 +39,25 @@
       low: 'nunca', high: 'quase sempre',
       items: [
         { id: 'J1', weight: 3, source: 'PGSI, item 1', text: 'Você apostou mais do que podia perder?' },
-        { id: 'J2', weight: 4, source: 'PGSI, item 7', text: 'Suas apostas causaram problemas financeiros?' }
+        { id: 'J2', weight: 3, source: 'PGSI, item 7', text: 'Suas apostas causaram problemas financeiros?' }
       ]
     },
     {
       id: 'vulnerabilidade', label: 'Vulnerabilidade social', window: 'No último mês, quanto isto aconteceu?',
       low: 'não aconteceu', high: 'o tempo todo',
       items: [
-        { id: 'V1', weight: 6, source: 'Elaborado para o protótipo', text: 'Faltou dinheiro para comida, contas ou remédios' },
+        { id: 'V1', weight: 5, source: 'Elaborado para o protótipo', text: 'Faltou dinheiro para comida, contas ou remédios' },
         { id: 'V2', weight: 5, source: 'Elaborado para o protótipo', text: 'Tive medo de perder o lugar onde moro, ou moro em condições inseguras' },
-        { id: 'V3', weight: 5, source: 'Elaborado para o protótipo', text: 'Senti que não tinha com quem contar quando precisei' }
+        { id: 'V3', weight: 4, source: 'Elaborado para o protótipo', text: 'Senti que não tinha com quem contar quando precisei' }
+      ]
+    },
+    {
+      id: 'luto', label: 'Luto', window: 'Se você perdeu alguém próximo nos últimos 12 meses, pense nessa perda. Se não perdeu, marque 0 nas três perguntas.',
+      low: 'não se aplica ou nunca', high: 'o tempo todo',
+      items: [
+        { id: 'L1', weight: 4, source: 'Adaptado do PG-13-R (dor emocional)', text: 'Sinto uma dor emocional intensa por causa dessa perda' },
+        { id: 'L2', weight: 3, source: 'Adaptado do PG-13-R (anseio pela pessoa)', text: 'Sinto uma saudade tão forte da pessoa que é difícil pensar em outra coisa' },
+        { id: 'L3', weight: 3, source: 'Adaptado do PG-13-R (dificuldade de retomar a vida)', text: 'Tenho dificuldade de retomar a rotina, os planos ou o convívio com outras pessoas depois da perda' }
       ]
     },
     {
@@ -68,14 +77,15 @@
   var CUT_HIGH = 50;
   /* A partir desta porcentagem, o fator sozinho garante ao menos "moderado" */
   var FACTOR_FLOOR_PCT = 70;
-  var FLOOR_FACTORS = ['depressao', 'ansiedade', 'vulnerabilidade'];
+  var FLOOR_FACTORS = ['depressao', 'ansiedade', 'vulnerabilidade', 'luto'];
   /* A partir desta porcentagem, o fator acrescenta uma orientação ao encaminhamento */
   var ADDON_PCT = 50;
 
   var ADDONS = {
     vulnerabilidade: 'Pode ser útil incluir orientação da assistência social, como o CRAS da região.',
     apostas: 'Pode ser útil conversar com a equipe sobre os hábitos de aposta, dentro da Rede de Atenção Psicossocial.',
-    sono: 'Pode ser útil incluir uma conversa sobre a rotina de sono na avaliação.'
+    sono: 'Pode ser útil incluir uma conversa sobre a rotina de sono na avaliação.',
+    luto: 'Pode ser útil oferecer acolhimento ao luto, com escuta na equipe ou grupos de apoio da Rede de Atenção Psicossocial.'
   };
 
   var REFERRAL = {
